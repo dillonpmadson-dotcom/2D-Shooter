@@ -1,8 +1,14 @@
 using UnityEngine;
 
+// Base class for all enemy types
+// Subclasses (ExplodingEnemy, MachineGunEnemy, ShooterEnemy) inherit from this
 public class Enemy : Character
 {
-    private Transform playerTargetTransform;
+    // Protected so child enemy classes can use it for their own AI
+    protected Transform playerTargetTransform;
+
+    // Distance to player (recalculated each frame, used by subclasses)
+    protected float distanceToPlayer;
 
     public override void Start()
     {
@@ -10,16 +16,21 @@ public class Enemy : Character
         playerTargetTransform = FindAnyObjectByType<Player>().transform;
     }
 
+    // virtual = subclasses can override and replace this behavior
     public virtual void Update()
     {
-        movementDirection = (playerTargetTransform.position - transform.position);
-        movementDirection = movementDirection.normalized;
+        // If the player has been destroyed, do nothing
+        if (playerTargetTransform == null) return;
 
+        // Update distance — subclasses use this to decide what to do
+        distanceToPlayer = Vector2.Distance(transform.position, playerTargetTransform.position);
+
+        // Default behavior: chase the player
+        movementDirection = (playerTargetTransform.position - transform.position).normalized;
+
+        // Always face the player
         Rotate(playerTargetTransform.position);
 
         Move();
-        
     }
-
 }
-   

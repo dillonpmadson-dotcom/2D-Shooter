@@ -14,8 +14,13 @@ public abstract class Character : MonoBehaviour
 
     public virtual void Start()
     {
-        healthModule = new Health(100);
+        // Auto-grab Rigidbody2D if not manually assigned (saves dragging it in the Inspector)
+        if (RigidbodyModule == null)
+        {
+            RigidbodyModule = GetComponent<Rigidbody2D>();
+        }
 
+        healthModule = new Health(100);
     }
 
 
