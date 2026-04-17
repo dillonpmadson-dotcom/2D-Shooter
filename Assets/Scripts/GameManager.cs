@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Build a ranged weapon with fire rate 5.5 and damage 10
-        weaponOption1 = new RangedWeapon(newFireRate: 5.5f, newDamage: 10);
+        // (Bullet prefab passed as null here — Player builds its own weapon with a real prefab)
+        weaponOption1 = new RangedWeapon(newFireRate: 5.5f, newDamage: 10, newBulletPrefab: null);
 
         // Build a melee weapon (uses default values from MeleeWeapon)
         weaponOption2 = new MeleeWeapon();
