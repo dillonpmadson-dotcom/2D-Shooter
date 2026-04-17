@@ -58,7 +58,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6b0b708b880ee48b1b5511c9eb8422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShooterEnemy
-  moveSpeed: 100
+  moveSpeed: 2.5
   RigidbodyModule: {fileID: 0}
   preferredDistance: 6
   distanceTolerance: 0.5

@@ -23,20 +23,15 @@ public class Player : Character, IDash
 
     void Update()
     {
-        // Read movement input (WASD / arrow keys)
+        // Read movement input (WASD / arrow keys) — input MUST be read in Update
         movementDirection.x = Input.GetAxisRaw("Horizontal");
         movementDirection.y = Input.GetAxisRaw("Vertical");
 
-        // Convert mouse screen position into world coordinates
+        // Convert mouse screen position into world coordinates + rotate to face mouse
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Rotate player to face the mouse
         Rotate(mousePosition);
 
-        // Apply movement
-        Move();
-
-        // Dash on Space
+        // Dash on Space (input event — must catch in Update)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Dash();
@@ -47,6 +42,13 @@ public class Player : Character, IDash
         {
             currentWeapon.Use(firePoint.position, firePoint.rotation);
         }
+    }
+
+    // Physics goes in FixedUpdate — runs in lock-step with the physics engine.
+    // This is what eliminates jitter when interpolation is on.
+    void FixedUpdate()
+    {
+        Move();
     }
 
     public void Dash()

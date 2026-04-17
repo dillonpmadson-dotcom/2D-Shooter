@@ -26,7 +26,9 @@ public abstract class Character : MonoBehaviour
 
     public void Move()
     {
-        RigidbodyModule.AddForce(movementDirection * moveSpeed * Time.fixedDeltaTime);
+        // Set velocity directly — crisp, responsive, jitter-free movement.
+        // movementDirection is already normalized (length 1) so speed = moveSpeed in units/sec.
+        RigidbodyModule.linearVelocity = movementDirection * moveSpeed;
     }
 
     public void Rotate(Vector3 directionToRotate)
