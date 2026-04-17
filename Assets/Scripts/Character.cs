@@ -37,7 +37,16 @@ public abstract class Character : MonoBehaviour
     }
 
     public virtual void Attack()
-    { 
+    {
 
+    }
+
+    // Called when this character runs out of health.
+    // virtual = subclasses (Enemy, Player) can override for custom death behavior
+    public virtual void Die()
+    {
+        if (isDead) return; // Prevent dying twice in the same frame
+        isDead = true;
+        Destroy(gameObject);
     }
 }

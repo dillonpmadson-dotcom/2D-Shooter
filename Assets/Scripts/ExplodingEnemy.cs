@@ -81,6 +81,10 @@ public class ExplodingEnemy : Enemy
             if (victim != null && victim != this && victim.healthModule != null)
             {
                 victim.healthModule.DecreaseHealth(explosionDamage);
+                if (victim.healthModule.IsDead)
+                {
+                    victim.Die();
+                }
             }
         }
 

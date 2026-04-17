@@ -55,4 +55,13 @@ public class Player : Character, IDash
     {
         RigidbodyModule.AddForce(movementDirection * moveSpeed * 3f);
     }
+
+    // Override base Die() — for now, the player doesn't get destroyed.
+    // Just refill HP so they keep playing. We'll add proper Game Over in Assignment 3.
+    public override void Die()
+    {
+        Debug.Log("Player would be dead! (Game Over coming in Assignment 3)");
+        if (healthModule != null) healthModule.healthpoints = 100;
+        // Note: deliberately NOT calling base.Die() so the GameObject isn't destroyed
+    }
 }

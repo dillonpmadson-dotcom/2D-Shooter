@@ -43,6 +43,12 @@ public class Bullet : MonoBehaviour
         if (victim != null && victim.healthModule != null)
         {
             victim.healthModule.DecreaseHealth(damage);
+
+            // Kill it if its health hit zero
+            if (victim.healthModule.IsDead)
+            {
+                victim.Die();
+            }
         }
 
         // Destroy the bullet on impact
