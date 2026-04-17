@@ -73,3 +73,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Visual Studio solution variants
+*.slnx
+.vsconfig
+
+# Old Game 2 files that shouldn't be in this repo
+PlatformerGame/
+PlatformerGame.zip
+
