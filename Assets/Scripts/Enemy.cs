@@ -4,6 +4,10 @@ using UnityEngine;
 // Subclasses (ExplodingEnemy, MachineGunEnemy, ShooterEnemy) inherit from this
 public class Enemy : Character
 {
+    // Static event fires every time an enemy dies — the PickupSpawner listens to this
+    // System.Action<Vector3> = "a method that takes a Vector3 and returns nothing"
+    public static System.Action<Vector3> OnEnemyDied;
+
     // Protected so child enemy classes can use it for their own AI
     protected Transform playerTargetTransform;
 
@@ -43,11 +47,16 @@ public class Enemy : Character
         Move();
     }
 
-    // Override base Die() to award score before destroying
+    // Override base Die() to award score and notify listeners (like PickupSpawner)
     public override void Die()
     {
         if (isDead) return;
         ScoreManager.AddScore(scoreValue);
+
+        // Fire the death event so anyone subscribed can react (PickupSpawner uses this)
+        // The "?" is null-conditional — only fires if there's at least one subscriber
+        OnEnemyDied?.Invoke(transform.position);
+
         base.Die(); // base.Die() handles the actual Destroy(gameObject)
     }
 }
