@@ -6,9 +6,13 @@ public abstract class Character : MonoBehaviour
     protected Vector2 movementDirection;
     protected bool isDead;
 
+    // Public read-only access — anyone can check if this character is dead
+    public bool IsDead => isDead;
+
 
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected Rigidbody2D RigidbodyModule;
+    [SerializeField] protected float maxHealth = 100f;
 
     public Health healthModule;
 
@@ -20,7 +24,7 @@ public abstract class Character : MonoBehaviour
             RigidbodyModule = GetComponent<Rigidbody2D>();
         }
 
-        healthModule = new Health(100);
+        healthModule = new Health(maxHealth);
     }
 
 

@@ -32,8 +32,10 @@ public class Enemy : Character
     // virtual = subclasses can override and replace this behavior
     public virtual void Update()
     {
-        // If the player has been destroyed, do nothing
+        // If the player has been destroyed OR is dead, do nothing
         if (playerTargetTransform == null) return;
+        Player player = playerTargetTransform.GetComponent<Player>();
+        if (player != null && player.IsDead) return;
 
         // Update distance — subclasses use this to decide what to do
         distanceToPlayer = Vector2.Distance(transform.position, playerTargetTransform.position);

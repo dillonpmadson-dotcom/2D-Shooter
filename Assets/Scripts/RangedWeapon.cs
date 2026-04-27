@@ -15,8 +15,9 @@ public class RangedWeapon : Weapon
         lastFireTime = -999f; // Allow firing immediately on game start
     }
 
-    // Fires a bullet from the given position, in the given direction
-    public void Use(Vector3 spawnPosition, Quaternion spawnRotation)
+    // Fires a bullet from the given position, in the given direction.
+    // The "owner" is the Character firing — bullet won't damage its own owner.
+    public void Use(Vector3 spawnPosition, Quaternion spawnRotation, Character owner = null)
     {
         // Check fire rate cooldown — only fire if enough time has passed
         if (Time.time - lastFireTime < 1f / fireRate)
@@ -28,11 +29,12 @@ public class RangedWeapon : Weapon
         // Spawn the bullet
         GameObject newBullet = GameObject.Instantiate(bulletPrefab, spawnPosition, spawnRotation);
 
-        // Tell the bullet how much damage to deal
+        // Configure the new bullet
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             bulletScript.SetDamage(damage);
+            bulletScript.SetOwner(owner);
         }
     }
 

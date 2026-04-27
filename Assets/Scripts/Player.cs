@@ -36,6 +36,9 @@ public class Player : Character, IDash
 
     void Update()
     {
+        // Stop responding to input once dead (Game Over UI takes over)
+        if (isDead) return;
+
         // Read movement input (WASD / arrow keys) — input MUST be read in Update
         movementDirection.x = Input.GetAxisRaw("Horizontal");
         movementDirection.y = Input.GetAxisRaw("Vertical");
@@ -57,11 +60,11 @@ public class Player : Character, IDash
         }
 
         // Fire on left mouse button (held = continuous fire, fire rate enforces cooldown)
-        // Use the boosted weapon while powered up
+        // Use the boosted weapon while powered up. Pass `this` so the bullet doesn't shoot us.
         if (Input.GetMouseButton(0))
         {
             RangedWeapon weaponToUse = HasGunPowerUp ? boostedWeapon : currentWeapon;
-            weaponToUse.Use(firePoint.position, firePoint.rotation);
+            weaponToUse.Use(firePoint.position, firePoint.rotation, this);
         }
 
         // Right mouse button = detonate a nuke (if we have any)
@@ -83,13 +86,23 @@ public class Player : Character, IDash
         RigidbodyModule.AddForce(movementDirection * moveSpeed * 3f);
     }
 
-    // Override base Die() — for now, the player doesn't get destroyed.
-    // Just refill HP so they keep playing. We'll add proper Game Over in Assignment 3.
+    // Static event fires when the player dies — GameOverManager listens for this
+    public static System.Action OnPlayerDied;
+
+    // Override base Die() — fire the event, freeze the player, but don't destroy the GameObject
+    // (we leave the player visible so the corpse stays on screen during Game Over)
     public override void Die()
     {
-        Debug.Log("Player would be dead! (Game Over coming in Assignment 3)");
-        if (healthModule != null) healthModule.healthpoints = 100;
-        // Note: deliberately NOT calling base.Die() so the GameObject isn't destroyed
+        if (isDead) return;
+        isDead = true;
+        Debug.Log("Player died!");
+
+        // Stop the player from moving + shooting
+        movementDirection = Vector2.zero;
+        if (RigidbodyModule != null) RigidbodyModule.linearVelocity = Vector2.zero;
+
+        // Notify the GameOverManager (or anyone else listening)
+        OnPlayerDied?.Invoke();
     }
 
     // Called by NukePickup when the player walks over one

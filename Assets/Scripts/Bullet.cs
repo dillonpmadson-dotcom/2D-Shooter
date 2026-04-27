@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Bullet flies forward, damages anything it hits, destroys itself after a short time
+// Bullet flies forward, damages anything it hits (except its own shooter), self-destructs after a time
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 15f;
@@ -9,49 +9,51 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody2D rigidbodyModule;
 
-    // Unity calls Start() once when the bullet is created
+    // Who fired this bullet — used so the bullet doesn't damage its own shooter
+    private Character owner;
+
     void Start()
     {
-        // Auto-grab the Rigidbody2D on this same GameObject
         rigidbodyModule = GetComponent<Rigidbody2D>();
-
-        // Push the bullet forward in the direction it's facing (transform.up)
         rigidbodyModule.linearVelocity = transform.up * speed;
 
-        // Schedule this bullet to be destroyed after `lifetime` seconds
-        // (so we don't leave bullets flying forever — would slow the game down)
+        // Auto-destroy after lifetime so old bullets don't pile up
         Destroy(gameObject, lifetime);
     }
 
-    // Public setter so the weapon can configure this bullet's damage when firing
     public void SetDamage(float newDamage)
     {
         damage = newDamage;
     }
 
-    // Unity calls this when this bullet's collider touches another collider
+    // Set by the weapon when it fires — tells the bullet who shot it
+    public void SetOwner(Character newOwner)
+    {
+        owner = newOwner;
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Don't damage the player who fired this bullet
-        if (collision.gameObject.CompareTag("Player"))
+        // Find the Character we hit (might be on this collider, or its parent)
+        Character victim = collision.gameObject.GetComponentInParent<Character>();
+
+        // Don't damage our own shooter
+        if (victim != null && victim == owner)
         {
             return;
         }
 
-        // If the thing we hit has a Character script, deal damage to it
-        Character victim = collision.gameObject.GetComponentInParent<Character>();
+        // Apply damage if we hit any other Character
         if (victim != null && victim.healthModule != null)
         {
             victim.healthModule.DecreaseHealth(damage);
-
-            // Kill it if its health hit zero
             if (victim.healthModule.IsDead)
             {
                 victim.Die();
             }
         }
 
-        // Destroy the bullet on impact
+        // Bullet vanishes on impact (whether it hit a Character or a wall)
         Destroy(gameObject);
     }
 }

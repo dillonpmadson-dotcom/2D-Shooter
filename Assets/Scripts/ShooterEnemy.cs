@@ -60,7 +60,7 @@ public class ShooterEnemy : Enemy
     {
         if (weapon != null && firePoint != null)
         {
-            weapon.Use(firePoint.position, firePoint.rotation);
+            weapon.Use(firePoint.position, firePoint.rotation, this);
         }
     }
 }

@@ -55,6 +55,6 @@ public class MachineGunEnemy : Enemy
         Quaternion spreadRotation = firePoint.rotation * Quaternion.Euler(0, 0, randomSpread);
 
         // Fire — RangedWeapon's fireRate cooldown still applies inside .Use()
-        weapon.Use(firePoint.position, spreadRotation);
+        weapon.Use(firePoint.position, spreadRotation, this);
     }
 }

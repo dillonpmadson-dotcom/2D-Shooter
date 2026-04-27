@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Static UI (Top-Left)")]
     [SerializeField] private TextMeshProUGUI nukeCountText;
+    [SerializeField] private TextMeshProUGUI healthText;
 
     [Header("Floating UI (Tracks Player)")]
     [SerializeField] private TextMeshProUGUI gunTimerText;
@@ -30,6 +31,19 @@ public class UIManager : MonoBehaviour
         if (nukeCountText != null)
         {
             nukeCountText.text = "Nukes: " + player.NukeCount;
+        }
+
+        // --- Health display ---
+        if (healthText != null && player.healthModule != null)
+        {
+            // Mathf.Max keeps it from showing negative numbers
+            int hp = Mathf.Max(0, Mathf.RoundToInt(player.healthModule.healthpoints));
+            healthText.text = "HP: " + hp;
+
+            // Color shifts red as HP gets low — visual urgency
+            if (hp <= 25) healthText.color = Color.red;
+            else if (hp <= 50) healthText.color = new Color(1f, 0.6f, 0f); // orange
+            else healthText.color = Color.green;
         }
 
         // --- Gun power-up timer (only visible when active) ---
