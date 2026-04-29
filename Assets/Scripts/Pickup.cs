@@ -26,6 +26,9 @@ public abstract class Pickup : MonoBehaviour
         // Only react to the Player
         if (other.GetComponentInParent<Player>() == null) return;
 
+        // Play pickup SFX
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayPickup();
+
         // Subclasses define what happens when picked up
         OnPickedUp(other.GetComponentInParent<Player>());
 

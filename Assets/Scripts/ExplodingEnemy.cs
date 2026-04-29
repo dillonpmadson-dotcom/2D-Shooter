@@ -72,6 +72,9 @@ public class ExplodingEnemy : Enemy
             elapsed += flashInterval;
         }
 
+        // Play explosion SFX
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayExplosion();
+
         // BOOM — find everything in explosion radius
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
         foreach (Collider2D hit in hits)

@@ -36,6 +36,9 @@ public class RangedWeapon : Weapon
             bulletScript.SetDamage(damage);
             bulletScript.SetOwner(owner);
         }
+
+        // Play shoot SFX
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayShoot();
     }
 
     // Old abstract Use() from Weapon — required override but not used for ranged

@@ -60,6 +60,9 @@ public class Enemy : Character
         OnEnemyDied?.Invoke(transform.position);
         OnEnemyDiedWithColor?.Invoke(transform.position, deathParticleColor);
 
+        // Play enemy death SFX
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayEnemyDeath();
+
         base.Die(); // base.Die() handles the actual Destroy(gameObject)
     }
 }
