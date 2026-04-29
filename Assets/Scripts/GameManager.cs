@@ -1,68 +1,73 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// GameManager: spawns random enemy types from screen edges on a timer
-// Drag your enemy prefabs into the enemyPrefabs list in the Inspector
+// GameManager: spawns random enemy types from screen edges on a timer.
+// Difficulty ramps over time: spawn interval shrinks + enemy cap grows.
 public class GameManager : MonoBehaviour
 {
-    [Header("Spawning")]
-    [SerializeField] private List<GameObject> enemyPrefabs;  // Drag ShooterEnemy, ExplodingEnemy, MachineGunEnemy here
-    [SerializeField] private float spawnInterval = 2f;       // Seconds between spawn attempts
-    [SerializeField] private int maxEnemiesAlive = 8;        // Hard cap so the screen isn't overrun
-    [SerializeField] private float edgePadding = 1.5f;       // How far OUTSIDE the screen edge to spawn
+    [Header("Spawn — Starting Values")]
+    [SerializeField] private List<GameObject> enemyPrefabs;
+    [SerializeField] private float startSpawnInterval = 2f;       // Slow start
+    [SerializeField] private int startMaxEnemiesAlive = 8;
 
-    [Header("References")]
-    [SerializeField] private Camera mainCamera;              // If left null, GameManager grabs Camera.main
+    [Header("Spawn — End Values (Hardest Difficulty)")]
+    [SerializeField] private float minSpawnInterval = 0.5f;       // Fast — but capped
+    [SerializeField] private int maxEnemiesAliveCap = 20;
 
-    // Internal timer
+    [Header("Difficulty Ramp")]
+    [SerializeField] private float secondsToReachMaxDifficulty = 90f; // After 90s = full difficulty
+
+    [Header("Spawn Position")]
+    [SerializeField] private float edgePadding = 1.5f;
+    [SerializeField] private Camera mainCamera;
+
+    // Internal timing
     private float timeSinceLastSpawn;
+    private float gameStartTime;
 
     void Start()
     {
-        // Auto-grab the main camera if not assigned in the Inspector
         if (mainCamera == null) mainCamera = Camera.main;
+        gameStartTime = Time.time;
     }
 
     void Update()
     {
-        // Tick the spawn timer
         timeSinceLastSpawn += Time.deltaTime;
 
+        // Calculate the current difficulty level (0 = start, 1 = fully ramped)
+        float difficultyT = Mathf.Clamp01((Time.time - gameStartTime) / secondsToReachMaxDifficulty);
+
+        // Lerp = blend the start and end values by the difficulty percentage
+        float currentSpawnInterval = Mathf.Lerp(startSpawnInterval, minSpawnInterval, difficultyT);
+        int currentMaxEnemies = Mathf.RoundToInt(Mathf.Lerp(startMaxEnemiesAlive, maxEnemiesAliveCap, difficultyT));
+
         // Bail out if we're at the cap or it's not time yet
-        if (timeSinceLastSpawn < spawnInterval) return;
-        if (CountAliveEnemies() >= maxEnemiesAlive) return;
+        if (timeSinceLastSpawn < currentSpawnInterval) return;
+        if (CountAliveEnemies() >= currentMaxEnemies) return;
         if (enemyPrefabs == null || enemyPrefabs.Count == 0) return;
 
-        // Reset timer and spawn one enemy
         timeSinceLastSpawn = 0f;
         SpawnRandomEnemy();
     }
 
-    // Picks a random prefab and a random off-screen edge position, then spawns it
     private void SpawnRandomEnemy()
     {
-        // Pick a random enemy type from the list
         int index = Random.Range(0, enemyPrefabs.Count);
         GameObject prefabToSpawn = enemyPrefabs[index];
 
-        // Pick a random point just OUTSIDE the screen edges
         Vector3 spawnPosition = GetRandomEdgePosition();
-
-        // Spawn it!
         Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
     }
 
     // Returns a world-space point a little past one of the four screen edges
     private Vector3 GetRandomEdgePosition()
     {
-        // Get the camera's view bounds in world space
         float cameraHeight = mainCamera.orthographicSize;
         float cameraWidth = cameraHeight * mainCamera.aspect;
         Vector3 cameraPos = mainCamera.transform.position;
 
-        // Pick which edge to spawn from (0=top, 1=bottom, 2=left, 3=right)
         int edge = Random.Range(0, 4);
-
         float x = 0f;
         float y = 0f;
 
@@ -89,10 +94,8 @@ public class GameManager : MonoBehaviour
         return new Vector3(cameraPos.x + x, cameraPos.y + y, 0f);
     }
 
-    // Counts how many Enemy-derived objects are currently alive in the scene
     private int CountAliveEnemies()
     {
-        // FindObjectsByType is the modern replacement for FindObjectsOfType
         Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         return enemies.Length;
     }

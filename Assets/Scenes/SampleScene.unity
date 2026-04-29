@@ -706,7 +706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   moveSpeed: 6
   RigidbodyModule: {fileID: 232805952}
-  maxHealth: 30
+  maxHealth: 80
   mousePosition: {x: 0, y: 0}
   bulletPrefab: {fileID: 7559668324672066529, guid: 11916b150b130af48b0cd101c3320164, type: 3}
   firePoint: {fileID: 99419974}
@@ -2604,8 +2604,11 @@ MonoBehaviour:
   - {fileID: 730864699125775252, guid: 9ad9104ffe3187a4d9da780f91122607, type: 3}
   - {fileID: 3390086017608479653, guid: 032ecf7057a7a9e46be6dc7d02e0f3a2, type: 3}
   - {fileID: 8502972736894771354, guid: 35876d72f0bb7be439600601f4315347, type: 3}
-  spawnInterval: 2
-  maxEnemiesAlive: 8
+  startSpawnInterval: 2
+  startMaxEnemiesAlive: 8
+  minSpawnInterval: 0.5
+  maxEnemiesAliveCap: 20
+  secondsToReachMaxDifficulty: 90
   edgePadding: 1.5
   mainCamera: {fileID: 0}
 --- !u!1001 &7868550260244979848
