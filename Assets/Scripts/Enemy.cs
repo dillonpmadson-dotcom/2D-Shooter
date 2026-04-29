@@ -4,9 +4,9 @@ using UnityEngine;
 // Subclasses (ExplodingEnemy, MachineGunEnemy, ShooterEnemy) inherit from this
 public class Enemy : Character
 {
-    // Static event fires every time an enemy dies — the PickupSpawner listens to this
-    // System.Action<Vector3> = "a method that takes a Vector3 and returns nothing"
+    // Death events — listeners react when any enemy dies
     public static System.Action<Vector3> OnEnemyDied;
+    public static System.Action<Vector3, Color> OnEnemyDiedWithColor;
 
     // Protected so child enemy classes can use it for their own AI
     protected Transform playerTargetTransform;
@@ -14,8 +14,9 @@ public class Enemy : Character
     // Distance to player (recalculated each frame, used by subclasses)
     protected float distanceToPlayer;
 
-    // Each enemy type can set its own point value via the Inspector
+    // Each enemy type configures these in the Inspector
     [SerializeField] protected int scoreValue = 10;
+    [SerializeField] protected Color deathParticleColor = Color.white;
 
     public override void Start()
     {
@@ -55,9 +56,9 @@ public class Enemy : Character
         if (isDead) return;
         ScoreManager.AddScore(scoreValue);
 
-        // Fire the death event so anyone subscribed can react (PickupSpawner uses this)
-        // The "?" is null-conditional — only fires if there's at least one subscriber
+        // Fire the death events so listeners can react
         OnEnemyDied?.Invoke(transform.position);
+        OnEnemyDiedWithColor?.Invoke(transform.position, deathParticleColor);
 
         base.Die(); // base.Die() handles the actual Destroy(gameObject)
     }

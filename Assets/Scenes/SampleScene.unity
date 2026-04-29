@@ -706,7 +706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   moveSpeed: 6
   RigidbodyModule: {fileID: 232805952}
-  maxHealth: 80
+  maxHealth: 100
   mousePosition: {x: 0, y: 0}
   bulletPrefab: {fileID: 7559668324672066529, guid: 11916b150b130af48b0cd101c3320164, type: 3}
   firePoint: {fileID: 99419974}
@@ -1594,6 +1594,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 671316596}
   m_CullTransparentMesh: 1
+--- !u!1 &856294277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 856294279}
+  - component: {fileID: 856294278}
+  m_Layer: 0
+  m_Name: DeathParticleSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &856294278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856294277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e51ec123c85aec4ab2996a627f67f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathParticleSpawner
+  deathParticlePrefab: {fileID: 1637441068221096528, guid: ad8182bee55482444a1d850712e957ed, type: 3}
+--- !u!4 &856294279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856294277}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &877848069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2742,3 +2787,4 @@ SceneRoots:
   - {fileID: 7868550260244979848}
   - {fileID: 1455540730}
   - {fileID: 1569060628}
+  - {fileID: 856294279}

@@ -171,6 +171,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplodingEnemy
   moveSpeed: 5.5
   RigidbodyModule: {fileID: 0}
+  scoreValue: 10
+  deathParticleColor: {r: 0.9, g: 0.15, b: 0.15, a: 1}
   explosionTriggerDistance: 1.5
   explosionRadius: 2.5
   explosionDamage: 40

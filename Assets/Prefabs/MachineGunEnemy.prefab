@@ -182,6 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MachineGunEnemy
   moveSpeed: 3.5
   RigidbodyModule: {fileID: 0}
+  scoreValue: 10
+  deathParticleColor: {r: 1, g: 0.55, b: 0.1, a: 1}
   shootingRange: 8
   bulletPrefab: {fileID: 7559668324672066529, guid: 11916b150b130af48b0cd101c3320164, type: 3}
   firePoint: {fileID: 5296328831087080934}
