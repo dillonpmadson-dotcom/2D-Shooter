@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Vector2 gunTimerScreenOffset = new Vector2(0, 60); // Pixels above player
     [SerializeField] private Camera mainCamera;
 
+    [Header("Dash Cooldown Bar")]
+    [SerializeField] private UnityEngine.UI.Image dashCooldownBar;
+
     void Start()
     {
         // Auto-find references if not assigned in Inspector
@@ -31,6 +34,12 @@ public class UIManager : MonoBehaviour
         if (nukeCountText != null)
         {
             nukeCountText.text = "Nukes: " + player.NukeCount;
+        }
+
+        // --- Dash cooldown bar (uses Image's "Filled" type) ---
+        if (dashCooldownBar != null)
+        {
+            dashCooldownBar.fillAmount = player.DashCooldownPercent;
         }
 
         // --- Health display ---

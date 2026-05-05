@@ -17,8 +17,24 @@ public class Bullet : MonoBehaviour
         rigidbodyModule = GetComponent<Rigidbody2D>();
         rigidbodyModule.linearVelocity = transform.up * speed;
 
+        // Add a glowing trail behind the bullet (looks great with bloom)
+        AddTrail();
+
         // Auto-destroy after lifetime so old bullets don't pile up
         Destroy(gameObject, lifetime);
+    }
+
+    private void AddTrail()
+    {
+        TrailRenderer trail = gameObject.AddComponent<TrailRenderer>();
+        trail.time = 0.15f;          // How long the trail lasts behind the bullet
+        trail.startWidth = 0.18f;    // Width near the bullet (tip)
+        trail.endWidth = 0.0f;       // Tapers to nothing at the tail
+        trail.minVertexDistance = 0.05f;
+        trail.material = new Material(Shader.Find("Sprites/Default"));
+        trail.startColor = new Color(1f, 0.95f, 0.3f, 1f); // bright yellow head
+        trail.endColor = new Color(1f, 0.95f, 0.3f, 0f);   // fade to transparent
+        trail.sortingOrder = 1;
     }
 
     public void SetDamage(float newDamage)

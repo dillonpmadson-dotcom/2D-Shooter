@@ -83,7 +83,12 @@ public class Player : Character, IDash
 
     public void Dash()
     {
-        RigidbodyModule.AddForce(movementDirection * moveSpeed * 3f);
+        // Only dash if the cooldown has passed
+        if (Time.time - lastDashTime < dashCooldown) return;
+        lastDashTime = Time.time;
+
+        // Quick velocity burst in the movement direction
+        RigidbodyModule.linearVelocity = movementDirection * moveSpeed * 4f;
     }
 
     // Static event fires when the player dies — GameOverManager listens for this
@@ -91,6 +96,18 @@ public class Player : Character, IDash
 
     [Header("Damage Flash")]
     [SerializeField] private UnityEngine.UI.Image damageFlashImage; // drag a full-screen red Image here
+
+    [Header("Dash")]
+    [SerializeField] private float dashCooldown = 1.5f;
+    private float lastDashTime = -999f;
+    public float DashCooldownPercent
+    {
+        get
+        {
+            float elapsed = Time.time - lastDashTime;
+            return Mathf.Clamp01(elapsed / dashCooldown);
+        }
+    }
 
     // Override TakeDamage to also flash the screen red
     public override void TakeDamage(float amount)

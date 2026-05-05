@@ -78,6 +78,7 @@ MonoBehaviour:
   RigidbodyModule: {fileID: 0}
   scoreValue: 10
   deathParticleColor: {r: 0.6, g: 0.3, b: 0.9, a: 1}
+  scorePopupPrefab: {fileID: 2932055059841293962, guid: b72f09b0809818946b1aaf617444b30d, type: 3}
   preferredDistance: 6
   distanceTolerance: 0.5
   bulletPrefab: {fileID: 7559668324672066529, guid: 11916b150b130af48b0cd101c3320164, type: 3}

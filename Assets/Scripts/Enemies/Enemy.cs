@@ -17,6 +17,7 @@ public class Enemy : Character
     // Each enemy type configures these in the Inspector
     [SerializeField] protected int scoreValue = 10;
     [SerializeField] protected Color deathParticleColor = Color.white;
+    [SerializeField] protected GameObject scorePopupPrefab; // optional — drag a ScorePopup prefab here
 
     public override void Start()
     {
@@ -55,6 +56,14 @@ public class Enemy : Character
     {
         if (isDead) return;
         ScoreManager.AddScore(scoreValue);
+
+        // Spawn floating score popup at our position
+        if (scorePopupPrefab != null)
+        {
+            GameObject popup = Instantiate(scorePopupPrefab, transform.position, Quaternion.identity);
+            ScorePopup script = popup.GetComponent<ScorePopup>();
+            if (script != null) script.SetValue(scoreValue);
+        }
 
         // Fire the death events so listeners can react
         OnEnemyDied?.Invoke(transform.position);
