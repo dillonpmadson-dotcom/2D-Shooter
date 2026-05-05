@@ -84,4 +84,5 @@ PlatformerGame.zip
 
 # Local MCP config (machine-specific paths)
 .mcp.json
+ProjectSettings/McpUnitySettings.json
 
