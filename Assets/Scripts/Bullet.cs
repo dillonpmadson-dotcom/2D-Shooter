@@ -44,13 +44,10 @@ public class Bullet : MonoBehaviour
         }
 
         // Apply damage if we hit any other Character
-        if (victim != null && victim.healthModule != null)
+        // TakeDamage handles the hit-flash, death-check, and death event for us
+        if (victim != null)
         {
-            victim.healthModule.DecreaseHealth(damage);
-            if (victim.healthModule.IsDead)
-            {
-                victim.Die();
-            }
+            victim.TakeDamage(damage);
         }
 
         // Bullet vanishes on impact (whether it hit a Character or a wall)

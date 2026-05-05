@@ -30,6 +30,10 @@ public class BurstParticle : MonoBehaviour
     {
         ps = GetComponent<ParticleSystem>();
 
+        // Stop any in-progress playback first — Unity won't let you change
+        // duration while the system is running
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
         // Main module — overall particle settings
         var main = ps.main;
         main.loop = false;

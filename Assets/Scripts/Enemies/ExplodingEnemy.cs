@@ -72,22 +72,20 @@ public class ExplodingEnemy : Enemy
             elapsed += flashInterval;
         }
 
-        // Play explosion SFX
+        // Play explosion SFX + shake the camera
         if (SoundManager.Instance != null) SoundManager.Instance.PlayExplosion();
+        if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.4f, 0.4f);
 
         // BOOM — find everything in explosion radius
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
         foreach (Collider2D hit in hits)
         {
-            // Damage any Character we hit (player or other enemies)
+            // Damage any Character we hit (player or other enemies).
+            // TakeDamage handles flash, death-check, and death event automatically.
             Character victim = hit.GetComponentInParent<Character>();
-            if (victim != null && victim != this && victim.healthModule != null)
+            if (victim != null && victim != this)
             {
-                victim.healthModule.DecreaseHealth(explosionDamage);
-                if (victim.healthModule.IsDead)
-                {
-                    victim.Die();
-                }
+                victim.TakeDamage(explosionDamage);
             }
         }
 

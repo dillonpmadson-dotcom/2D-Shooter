@@ -89,6 +89,37 @@ public class Player : Character, IDash
     // Static event fires when the player dies — GameOverManager listens for this
     public static System.Action OnPlayerDied;
 
+    [Header("Damage Flash")]
+    [SerializeField] private UnityEngine.UI.Image damageFlashImage; // drag a full-screen red Image here
+
+    // Override TakeDamage to also flash the screen red
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount); // inherited: HP decrease + body flash + die-check
+
+        if (damageFlashImage != null && !isDead)
+        {
+            StartCoroutine(ScreenDamageFlash());
+        }
+    }
+
+    private System.Collections.IEnumerator ScreenDamageFlash()
+    {
+        float elapsed = 0f;
+        float duration = 0.3f;
+        Color flashColor = new Color(1f, 0f, 0f, 0.35f);
+        Color clearColor = new Color(1f, 0f, 0f, 0f);
+
+        damageFlashImage.color = flashColor;
+        while (elapsed < duration)
+        {
+            damageFlashImage.color = Color.Lerp(flashColor, clearColor, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        damageFlashImage.color = clearColor;
+    }
+
     // Override base Die() — fire the event, freeze the player, but don't destroy the GameObject
     // (we leave the player visible so the corpse stays on screen during Game Over)
     public override void Die()
@@ -126,18 +157,11 @@ public class Player : Character, IDash
         if (nukeCount <= 0) return;
         nukeCount--;
 
-        // Kill every enemy
+        // Kill every enemy (pickups are spared so the player can still grab them)
         Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (Enemy enemy in enemies)
         {
             enemy.Die();
-        }
-
-        // Also clear out any other pickups on screen (per assignment spec)
-        Pickup[] pickups = FindObjectsByType<Pickup>(FindObjectsSortMode.None);
-        foreach (Pickup pickup in pickups)
-        {
-            Destroy(pickup.gameObject);
         }
 
         Debug.Log("BOOM! Nuke detonated. Nukes left: " + nukeCount);

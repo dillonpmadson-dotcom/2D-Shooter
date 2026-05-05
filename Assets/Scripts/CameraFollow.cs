@@ -24,7 +24,14 @@ public class CameraFollow : MonoBehaviour
 
         // Snap directly to the target position. Because the Player has Rigidbody2D
         // Interpolation enabled, target.position is already the smoothed visual position.
-        // Doing extra Lerp here would create relative jitter.
-        transform.position = target.position + offset;
+        Vector3 desired = target.position + offset;
+
+        // Add shake offset (zero unless CameraShake.Shake() was called recently)
+        if (CameraShake.Instance != null)
+        {
+            desired += CameraShake.Instance.GetCurrentOffset();
+        }
+
+        transform.position = desired;
     }
 }
