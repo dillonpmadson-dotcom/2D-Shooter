@@ -19,11 +19,16 @@ public class UIManager : MonoBehaviour
     [Header("Dash Cooldown Bar")]
     [SerializeField] private UnityEngine.UI.Image dashCooldownBar;
 
+    [Header("Wave Indicator")]
+    [SerializeField] private TextMeshProUGUI waveText;
+    [SerializeField] private GameManager gameManager;
+
     void Start()
     {
         // Auto-find references if not assigned in Inspector
         if (player == null) player = FindAnyObjectByType<Player>();
         if (mainCamera == null) mainCamera = Camera.main;
+        if (gameManager == null) gameManager = FindAnyObjectByType<GameManager>();
     }
 
     void Update()
@@ -34,6 +39,14 @@ public class UIManager : MonoBehaviour
         if (nukeCountText != null)
         {
             nukeCountText.text = "Nukes: " + player.NukeCount;
+        }
+
+        // --- Wave indicator (survival time + difficulty %) ---
+        if (waveText != null && gameManager != null)
+        {
+            int seconds = Mathf.FloorToInt(gameManager.ElapsedTime);
+            int wave = Mathf.FloorToInt(gameManager.DifficultyPercent * 10f) + 1; // 1-10 wave scale
+            waveText.text = "Wave " + wave + "  |  " + seconds + "s";
         }
 
         // --- Dash cooldown bar (uses Image's "Filled" type) ---

@@ -72,9 +72,10 @@ public class ExplodingEnemy : Enemy
             elapsed += flashInterval;
         }
 
-        // Play explosion SFX + shake the camera
+        // Play explosion SFX + shake camera + freeze time briefly for impact
         if (SoundManager.Instance != null) SoundManager.Instance.PlayExplosion();
         if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.4f, 0.4f);
+        if (HitStop.Instance != null) HitStop.Instance.Freeze(0.08f);
 
         // BOOM — find everything in explosion radius
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);

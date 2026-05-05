@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     private float timeSinceLastSpawn;
     private float gameStartTime;
 
+    // Public read-only access for the UI
+    public float ElapsedTime => Time.time - gameStartTime;
+    public float DifficultyPercent => Mathf.Clamp01(ElapsedTime / secondsToReachMaxDifficulty);
+
     void Start()
     {
         if (mainCamera == null) mainCamera = Camera.main;

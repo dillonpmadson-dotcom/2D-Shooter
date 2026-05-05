@@ -75,9 +75,11 @@ public class Player : Character, IDash
     }
 
     // Physics goes in FixedUpdate — runs in lock-step with the physics engine.
-    // This is what eliminates jitter when interpolation is on.
     void FixedUpdate()
     {
+        // While dashing, leave velocity alone so the dash actually pushes us
+        if (Time.time < dashEndTime) return;
+
         Move();
     }
 
@@ -86,9 +88,14 @@ public class Player : Character, IDash
         // Only dash if the cooldown has passed
         if (Time.time - lastDashTime < dashCooldown) return;
         lastDashTime = Time.time;
+        dashEndTime = Time.time + dashDuration;
 
-        // Quick velocity burst in the movement direction
-        RigidbodyModule.linearVelocity = movementDirection * moveSpeed * 4f;
+        // Pick dash direction: use current input, or face direction if standing still
+        Vector2 dashDir = movementDirection.sqrMagnitude > 0.1f
+            ? movementDirection.normalized
+            : (Vector2)transform.up;
+
+        RigidbodyModule.linearVelocity = dashDir * dashSpeed;
     }
 
     // Static event fires when the player dies — GameOverManager listens for this
@@ -99,7 +106,11 @@ public class Player : Character, IDash
 
     [Header("Dash")]
     [SerializeField] private float dashCooldown = 1.5f;
+    [SerializeField] private float dashSpeed = 25f;
+    [SerializeField] private float dashDuration = 0.15f;
     private float lastDashTime = -999f;
+    private float dashEndTime = 0f;
+
     public float DashCooldownPercent
     {
         get
